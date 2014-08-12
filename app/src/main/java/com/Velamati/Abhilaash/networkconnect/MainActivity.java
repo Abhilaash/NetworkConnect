@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -105,12 +106,29 @@ public class MainActivity extends FragmentActivity {
          */
         @Override
         protected void onPostExecute(String result) {
-            Log.i(TAG, result);
             try {
                 json = new JSONArray(result);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            JSONObject j;
+            new JSONObject();
+            textview.setText("");
+
+            			for(int x = 0; x < json.length(); x++)
+            			{
+                            JSONObject obj = null;
+                            try {
+                                obj = json.getJSONObject(x);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                textview.append(obj.getString("notamtext") + "\n" + (obj.getString("notamnumber")) + "\n");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+            			}
         }
     }
 
