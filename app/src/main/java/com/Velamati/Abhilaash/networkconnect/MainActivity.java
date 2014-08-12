@@ -5,12 +5,10 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.SearchView;
-import android.widget.TextView;
+import android.widget.*;
 
 import com.Velamati.Abhilaash.common.logger.Log;
 import com.Velamati.Abhilaash.common.logger.LogFragment;
@@ -19,7 +17,6 @@ import com.Velamati.Abhilaash.common.logger.MessageOnlyLogFilter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,11 +24,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-//import android.util.TypedValue;
-//import org.json.JSONObject;
-//import java.io.Reader;
-//import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Sample application demonstrating how to connect to the network and fetch raw
@@ -43,21 +37,23 @@ import java.net.URL;
  */
 public class MainActivity extends FragmentActivity {
 
-    public static final String TAG = "Network Connect";
-
     // Reference to the fragment showing events, so we can clear it with a button
     // as necessary.
     private LogFragment mLogFragment;
     private JSONArray json = null;
-    private TextView textview = null;
+//    private TextView textview = null;
+    private ExpandableListView listview = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Initialize list view to put the textview into.
+        listview = (ExpandableListView) findViewById(R.id.listview);
+
         // Initialize text fragment that displays intro text.
-        textview = (TextView) findViewById(R.id.textview);
+//        textview = (TextView) findViewById(R.id.textview);
 
         // Initialize the logging framework.
         initializeLogging();
@@ -108,27 +104,10 @@ public class MainActivity extends FragmentActivity {
         protected void onPostExecute(String result) {
             try {
                 json = new JSONArray(result);
+                display();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            JSONObject j;
-            new JSONObject();
-            textview.setText("");
-
-            			for(int x = 0; x < json.length(); x++)
-            			{
-                            JSONObject obj = null;
-                            try {
-                                obj = json.getJSONObject(x);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                textview.append(obj.getString("notamtext") + "\n" + (obj.getString("notamnumber")) + "\n");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-            			}
         }
     }
 
@@ -151,6 +130,31 @@ public class MainActivity extends FragmentActivity {
         return str;
     }
 
+     private void display()
+     {
+         ArrayList<String> headers = new ArrayList<String>();
+         HashMap<String, ArrayList<String>> hm = new HashMap<String, ArrayList<String>>();
+         for (int x = 0; x < json.length(); x++) {
+             try {
+                 headers.add(json.getJSONObject(x).getString("notamnumber") + "\n" + json.getJSONObject(x).getString("notamtext"));
+                 ArrayList<String> values = new ArrayList<String>();
+                 values.add(json.getJSONObject(x).getString("eventid"));
+                 values.add(json.getJSONObject(x).getString("class"));
+                 values.add(json.getJSONObject(x).getString("startdate"));
+                 values.add(json.getJSONObject(x).getString("enddate"));
+                 values.add(json.getJSONObject(x).getString("affectedfeature"));
+                 values.add(json.getJSONObject(x).getString("geom"));
+
+//                 if(json.getJSONObject(x).getString("image") != null)
+//                     values.add(json.getJSONObject(x).getString("image"));
+                     hm.put(json.getJSONObject(x).getString("notamnumber"), values);
+             } catch (JSONException e) {
+                 e.printStackTrace();
+             }
+         }
+         ExpandableListAdapter listAdapter = new ExpandableListAdapter(this, headers, hm);
+         listview.setAdapter(listAdapter);
+     }
     /**
      * Given a string representation of a URL, sets up a connection and gets
      * an input stream.
@@ -225,3 +229,16 @@ public class MainActivity extends FragmentActivity {
         msgFilter.setNext(mLogFragment.getLogView());
     }
 }
+
+//         for(int x = 0; x < json.length(); x++)
+//         {
+//             JSONObject obj = null;
+//             try {
+//                 obj = json.getJSONObject(x);
+//                 if (obj != null) {
+//                     textview.append(obj.getString("notamtext") + "\n" + (obj.getString("notamnumber")) + "\n");
+//                 }
+//             } catch (JSONException e) {
+//                 e.printStackTrace();
+//             }
+//         }
