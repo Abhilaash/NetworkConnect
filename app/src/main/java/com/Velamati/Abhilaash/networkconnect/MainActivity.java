@@ -154,6 +154,7 @@ public class MainActivity extends FragmentActivity {
          }
          ExpandableListAdapter listAdapter = new ExpandableListAdapter(this, headers, hm);
          listview.setAdapter(listAdapter);
+         listview.setCacheColorHint(696969);
      }
     /**
      * Given a string representation of a URL, sets up a connection and gets
