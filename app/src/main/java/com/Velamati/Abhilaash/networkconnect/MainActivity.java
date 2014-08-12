@@ -1,9 +1,14 @@
 package com.Velamati.Abhilaash.networkconnect;
+
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.Velamati.Abhilaash.common.logger.Log;
@@ -13,6 +18,7 @@ import com.Velamati.Abhilaash.common.logger.MessageOnlyLogFilter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,6 +28,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 //import android.util.TypedValue;
+//import org.json.JSONObject;
 //import java.io.Reader;
 //import java.io.UnsupportedEncodingException;
 
@@ -44,9 +51,9 @@ public class MainActivity extends FragmentActivity {
     private TextView textview = null;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sample_main);
+        setContentView(R.layout.activity_main);
 
         // Initialize text fragment that displays intro text.
         textview = (TextView) findViewById(R.id.textview);
@@ -57,35 +64,56 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        //getMenuInflater().inflate(R.menu.options_menu, menu);
+        new DownloadTask().execute("http://www.antarice.com/concepts/vnotam/document.json");
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.fetch_action:
-                new DownloadTask().execute("http://www.antarice.com/concepts/vnotam/document.json");
-//ISSUE#1
-//                  JSONObject j;
-//                for(int x = 0; x < json.length(); x++){
-//                    try {
-//                        j = json.getJSONObject(x);
-//                        textview.append(j.getString("notamnumber") + "\n" + j.getString("notamtext") + "\n");
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-
-
-                return true;
-//            // Clear the log view fragment.
-//            case R.id.clear_action:
-//                mLogFragment.getLogView().setText("");
-//                return true;
-//        }
-//        return false;
+        int id = item.getItemId();
+        return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Implementation of AsyncTask, to fetch the data in the background away from
+     * the UI thread.
+     */
+    private class DownloadTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... urls) {
+            try {
+                return loadFromNetwork(urls[0]);
+            } catch (IOException e) {
+                return "Connection Error";
+            }
+        }
+
+        /**
+         * Uses the logging framework to display the output of the fetch
+         * operation in the log fragment.
+         */
+        @Override
+        protected void onPostExecute(String result) {
+            Log.i(TAG, result);
+            try {
+                json = new JSONArray(result);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     /**
      * Initiates the fetch operation.
@@ -159,7 +187,16 @@ public class MainActivity extends FragmentActivity {
         // Wraps Android's native log framework
         LogWrapper logWrapper = new LogWrapper();
         Log.setLogNode(logWrapper);
-
+//////ISSUE#1
+//        JSONObject j;
+//        for (int x = 0; x < json.length(); x++) {
+//            try {
+//                j = json.getJSONObject(x);
+//                textview.append(j.getString("notamnumber") + "\n" + j.getString("notamtext") + "\n");
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
         // A filter that strips out everything except the message text.
         MessageOnlyLogFilter msgFilter = new MessageOnlyLogFilter();
         logWrapper.setNext(msgFilter);
@@ -168,35 +205,5 @@ public class MainActivity extends FragmentActivity {
         mLogFragment =
                 (LogFragment) getSupportFragmentManager().findFragmentById(R.id.log_fragment);
         msgFilter.setNext(mLogFragment.getLogView());
-    }
-
-    /**
-     * Implementation of AsyncTask, to fetch the data in the background away from
-     * the UI thread.
-     */
-    private class DownloadTask extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... urls) {
-            try {
-                return loadFromNetwork(urls[0]);
-            } catch (IOException e) {
-                return "Connection Error";
-            }
-        }
-
-        /**
-         * Uses the logging framework to display the output of the fetch
-         * operation in the log fragment.
-         */
-        @Override
-        protected void onPostExecute(String result) {
-            Log.i(TAG, result);
-            try {
-                json = new JSONArray(result);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

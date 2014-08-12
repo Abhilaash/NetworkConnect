@@ -31,16 +31,13 @@ import android.widget.TextView;
  */
 public class SimpleTextFragment extends Fragment {
 
-    // Contains the text that will be displayed by this Fragment
-    String mText;
-
-    // Contains a resource ID for the text that will be displayed by this fragment.
-    int mTextId = -1;
-
     // Keys which will be used to store/retrieve text passed in via setArguments.
     public static final String TEXT_KEY = "text";
     public static final String TEXT_ID_KEY = "text_id";
-
+    // Contains the text that will be displayed by this Fragment
+    String mText;
+    // Contains a resource ID for the text that will be displayed by this fragment.
+    int mTextId = -1;
     // For situations where the app wants to modify text at Runtime, exposing the TextView.
     private TextView mTextView;
 
@@ -49,7 +46,7 @@ public class SimpleTextFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         // Before initializing the textView, check if any arguments were provided via setArguments.
         processArguments();
 
@@ -70,6 +67,7 @@ public class SimpleTextFragment extends Fragment {
 
     /**
      * Changes the text for this TextView, according to the resource ID provided.
+     *
      * @param stringId A resource ID representing the text content for this Fragment's TextView.
      */
     public void setText(int stringId) {
