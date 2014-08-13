@@ -1,17 +1,16 @@
 package com.Velamati.Abhilaash.networkconnect;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import android.content.Context;
-import android.graphics.Typeface;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
@@ -20,8 +19,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     // child data in format of header title, child title
     private HashMap<String, ArrayList<String>> listDataChild;
 
-    public ExpandableListAdapter(Context _context, List<String> _listDataHeader,
-                                 HashMap<String, ArrayList<String>> _listChildData) {
+    public ExpandableListAdapter(Context _context, List<String> _listDataHeader, HashMap<String, ArrayList<String>> _listChildData) {
         this.context = _context;
         this.listDataHeader = _listDataHeader;
         this.listDataChild = _listChildData;
@@ -32,9 +30,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return this.listDataChild.get(this.listDataHeader.get(groupPosition)).get(childPosititon);
     }
 
-    public void setBackgroundColor(int color) {
-
-    }
     @Override
     public long getChildId(int groupPosition, int childPosition) {
         return childPosition;

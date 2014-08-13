@@ -26,21 +26,21 @@ public class ResizeAnimation extends Animation {
         mToWidth = toWidth;
         mFromHeight = fromHeight;
         mFromWidth = fromWidth;
-        mView = listItem.getHolder().getTextViewWrap();
+//        mView = listItem.getHolder().getTextViewWrap();
         mListAdapter = listAdapter;
         mListItem = listItem;
         setDuration(200);
     }
 
-    @Override
-    protected void applyTransformation(float interpolatedTime, Transformation t) {
-        float height = (mToHeight - mFromHeight) * interpolatedTime
-                + mFromHeight;
-        float width = (mToWidth - mFromWidth) * interpolatedTime + mFromWidth;
-        LayoutParams p = (LayoutParams) mView.getLayoutParams();
-        p.height = (int) height;
-        p.width = (int) width;
-        mListItem.setCurrentHeight(p.height);
-        mListAdapter.notifyDataSetChanged();
-    }
+//    @Override
+//    protected void applyTransformation(float interpolatedTime, Transformation t) {
+//        float height = (mToHeight - mFromHeight) * interpolatedTime
+//                + mFromHeight;
+//        float width = (mToWidth - mFromWidth) * interpolatedTime + mFromWidth;
+//        LayoutParams p = (LayoutParams) mView.getLayoutParams();
+//        p.height = (int) height;
+//        p.width = (int) width;
+//        mListItem.setCurrentHeight(p.height);
+//        mListAdapter.notifyDataSetChanged();
+//    }
 }

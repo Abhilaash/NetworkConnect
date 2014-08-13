@@ -2,6 +2,8 @@ package com.Velamati.Abhilaash.networkconnect;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -46,19 +48,16 @@ public class MainActivity extends FragmentActivity {
     private LogFragment mLogFragment;
     private JSONArray json = null;
     private HashMap<String, ArrayList<String>> hm;
-    //    private TextView textview = null;
     private ExpandableListView listview = null;
+    private Bitmap bmp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Initialize list view to put the textview into.
+        //Initialize expandable list view to display notams.
         listview = (ExpandableListView) findViewById(R.id.listview);
-
-        // Initialize text fragment that displays intro text.
-//        textview = (TextView) findViewById(R.id.textview);
 
         // Initialize the logging framework.
         initializeLogging();
@@ -116,7 +115,6 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
-
     /**
      * Initiates the fetch operation.
      */
@@ -135,28 +133,6 @@ public class MainActivity extends FragmentActivity {
         return str;
     }
 
-    private void display()
-    {
-        headers = new ArrayList<String>();
-        hm = new HashMap<String, ArrayList<String>>();
-        for (int x = 0; x < json.length(); x++) {
-            try {
-                headers.add(json.getJSONObject(x).getString("eventid") + ":" + json.getJSONObject(x).getString("notamnumber") + ":" + json.getJSONObject(x).getString("notamtext"));
-                values = new ArrayList<String>();
-                Iterator<String> y = json.getJSONObject(x).keys();
-                while(y.hasNext()) {
-                    String str = y.next();
-                    if(!json.getJSONObject(x).getString(str).equals(""))
-                        values.add(json.getJSONObject(x).getString(str));
-                }
-                hm.put(headers.get(x), values);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        ExpandableListAdapter listAdapter = new ExpandableListAdapter(this, headers, hm);
-        listview.setAdapter(listAdapter);
-    }
     /**
      * Given a string representation of a URL, sets up a connection and gets
      * an input stream.
@@ -198,6 +174,62 @@ public class MainActivity extends FragmentActivity {
             br.close();
         }
         return a;
+    }
+
+    private class DownloadImage extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... urls) {
+            try {
+                loadImageFromNetwork(urls[0]);
+            } catch (IOException e) {
+                return null;
+            }
+            return null;
+        }
+    }
+
+    private void loadImageFromNetwork(String urlString) throws IOException {
+        InputStream stream = null;
+        try {
+            stream = downloadUrl(urlString);
+            convertIt(stream);
+        } finally {
+            if (stream != null) {
+                stream.close();
+            }
+        }
+    }
+
+    private void convertIt(InputStream stream) throws IOException {
+        bmp = BitmapFactory.decodeStream(stream);
+    }
+
+    private void display()
+    {
+        headers = new ArrayList<String>();
+        hm = new HashMap<String, ArrayList<String>>();
+        for (int x = 0; x < json.length(); x++) {
+            try {
+                headers.add(json.getJSONObject(x).getString("eventid") + ":" + json.getJSONObject(x).getString("notamnumber") + ":" + json.getJSONObject(x).getString("notamtext"));
+                values = new ArrayList<String>();
+                Iterator<String> y = json.getJSONObject(x).keys();
+                while(y.hasNext()) {
+                    String str = y.next();
+                    if(!json.getJSONObject(x).getString(str).equals(""))
+                        if(!str.contains("image"))
+                            values.add(json.getJSONObject(x).getString(str));
+                        else{
+
+                        }
+                }
+                hm.put(headers.get(x), values);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        ExpandableListAdapter listAdapter = new ExpandableListAdapter(this, headers, hm);
+        listview.setAdapter(listAdapter);
     }
 
     /**
