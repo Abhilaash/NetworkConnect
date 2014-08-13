@@ -2,16 +2,14 @@ package com.Velamati.Abhilaash.networkconnect;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.*;
+import android.widget.ExpandableListView;
+import android.widget.SearchView;
 
 import com.Velamati.Abhilaash.common.logger.Log;
 import com.Velamati.Abhilaash.common.logger.LogFragment;
@@ -41,15 +39,9 @@ import java.util.Iterator;
  */
 public class MainActivity extends FragmentActivity {
 
-    // Reference to the fragment showing events, so we can clear it with a button
-    // as necessary.
-    private ArrayList<String> values;
-    private ArrayList<String> headers;
-    private LogFragment mLogFragment;
     private JSONArray json = null;
-    private HashMap<String, ArrayList<String>> hm;
     private ExpandableListView listview = null;
-    private Bitmap bmp;
+//    private Bitmap bmp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +63,8 @@ public class MainActivity extends FragmentActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
         // Associate searchable configuration with the SearchView
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
-                (SearchView) menu.findItem(R.id.search).getActionView();
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         return true;
     }
@@ -176,43 +166,15 @@ public class MainActivity extends FragmentActivity {
         return a;
     }
 
-    private class DownloadImage extends AsyncTask<String, Void, Void> {
-
-        @Override
-        protected Void doInBackground(String... urls) {
-            try {
-                loadImageFromNetwork(urls[0]);
-            } catch (IOException e) {
-                return null;
-            }
-            return null;
-        }
-    }
-
-    private void loadImageFromNetwork(String urlString) throws IOException {
-        InputStream stream = null;
-        try {
-            stream = downloadUrl(urlString);
-            convertIt(stream);
-        } finally {
-            if (stream != null) {
-                stream.close();
-            }
-        }
-    }
-
-    private void convertIt(InputStream stream) throws IOException {
-        bmp = BitmapFactory.decodeStream(stream);
-    }
-
     private void display()
     {
-        headers = new ArrayList<String>();
-        hm = new HashMap<String, ArrayList<String>>();
+        ArrayList<String> headers = new ArrayList<String>();
+        HashMap<String, ArrayList<String>> hm = new HashMap<String, ArrayList<String>>();
+        HashMap<String, String> bm = new HashMap<String, String>();
         for (int x = 0; x < json.length(); x++) {
             try {
                 headers.add(json.getJSONObject(x).getString("eventid") + ":" + json.getJSONObject(x).getString("notamnumber") + ":" + json.getJSONObject(x).getString("notamtext"));
-                values = new ArrayList<String>();
+                ArrayList<String> values = new ArrayList<String>();
                 Iterator<String> y = json.getJSONObject(x).keys();
                 while(y.hasNext()) {
                     String str = y.next();
@@ -220,7 +182,7 @@ public class MainActivity extends FragmentActivity {
                         if(!str.contains("image"))
                             values.add(json.getJSONObject(x).getString(str));
                         else{
-
+                            bm.put(json.getJSONObject(x).getString("eventid"), json.getJSONObject(x).getString("image"));
                         }
                 }
                 hm.put(headers.get(x), values);
@@ -228,7 +190,7 @@ public class MainActivity extends FragmentActivity {
                 e.printStackTrace();
             }
         }
-        ExpandableListAdapter listAdapter = new ExpandableListAdapter(this, headers, hm);
+        ExpandableListAdapter listAdapter = new ExpandableListAdapter(this, headers, hm, bm);
         listview.setAdapter(listAdapter);
     }
 
@@ -258,8 +220,7 @@ public class MainActivity extends FragmentActivity {
         logWrapper.setNext(msgFilter);
 
         // On screen logging via a fragment with a TextView.
-        mLogFragment =
-                (LogFragment) getSupportFragmentManager().findFragmentById(R.id.log_fragment);
+        LogFragment mLogFragment = (LogFragment) getSupportFragmentManager().findFragmentById(R.id.log_fragment);
         msgFilter.setNext(mLogFragment.getLogView());
     }
 }
