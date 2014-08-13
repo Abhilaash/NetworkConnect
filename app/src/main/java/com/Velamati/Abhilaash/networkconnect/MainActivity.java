@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.*;
 
 import com.Velamati.Abhilaash.common.logger.Log;
@@ -41,9 +42,11 @@ public class MainActivity extends FragmentActivity {
     // Reference to the fragment showing events, so we can clear it with a button
     // as necessary.
     private ArrayList<String> values;
+    private ArrayList<String> headers;
     private LogFragment mLogFragment;
     private JSONArray json = null;
-//    private TextView textview = null;
+    private HashMap<String, ArrayList<String>> hm;
+    //    private TextView textview = null;
     private ExpandableListView listview = null;
 
     @Override
@@ -132,26 +135,70 @@ public class MainActivity extends FragmentActivity {
         return str;
     }
 
-     private void display()
-     {
-         ArrayList<String> headers = new ArrayList<String>();
-         HashMap<String, ArrayList<String>> hm = new HashMap<String, ArrayList<String>>();
-         for (int x = 0; x < json.length(); x++) {
-             try {
-                 headers.add(json.getJSONObject(x).getString("notamnumber") + "\n" + json.getJSONObject(x).getString("notamtext"));
-                 values = new ArrayList<String>();
-                 Iterator<String> y = json.getJSONObject(x).keys();
-                 while(y.hasNext()) {
-                     values.add(json.getJSONObject(x).getString(y.next()));
-                 }
-                     hm.put(json.getJSONObject(x).getString("notamnumber"), values);
-             } catch (JSONException e) {
-                 e.printStackTrace();
-             }
-         }
-         ExpandableListAdapter listAdapter = new ExpandableListAdapter(this, headers, hm);
-         listview.setAdapter(listAdapter);
-     }
+    private void display()
+    {
+        headers = new ArrayList<String>();
+        hm = new HashMap<String, ArrayList<String>>();
+        for (int x = 0; x < json.length(); x++) {
+            try {
+                headers.add(json.getJSONObject(x).getString("notamnumber") + "\n" + json.getJSONObject(x).getString("notamtext"));
+                values = new ArrayList<String>();
+                Iterator<String> y = json.getJSONObject(x).keys();
+                while(y.hasNext()) {
+                    String str = y.next();
+                    if(!headers.contains(json.getJSONObject(x).getString(str)))
+                        values.add(json.getJSONObject(x).getString(str));
+                }
+                hm.put(headers.get(x), values);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        ExpandableListAdapter listAdapter = new ExpandableListAdapter(this, headers, hm);
+        listview.setAdapter(listAdapter);
+        listview.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                 Toast.makeText(getApplicationContext(), "Group Clicked " + headers.get(groupPosition), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
+        // Listview Group expanded listener
+        listview.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                Toast.makeText(getApplicationContext(),
+                        headers.get(groupPosition) + " Expanded",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Listview Group collasped listener
+        listview.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
+
+            @Override
+            public void onGroupCollapse(int groupPosition) {
+                Toast.makeText(getApplicationContext(),
+                        headers.get(groupPosition) + " Collapsed",
+                        Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        // Listview on child click listener
+        listview.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v,
+                                        int groupPosition, int childPosition, long id) {
+                // TODO Auto-generated method stub
+                Toast.makeText(getApplicationContext(), headers.get(groupPosition) + " : "+ hm.get(headers.get(groupPosition)).get(childPosition), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+    }
     /**
      * Given a string representation of a URL, sets up a connection and gets
      * an input stream.
