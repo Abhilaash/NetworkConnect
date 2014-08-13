@@ -6,7 +6,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +31,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return this.listDataChild.get(this.listDataHeader.get(groupPosition)).get(childPosititon);
     }
 
+    public void setBackgroundColor(int color) {
+
+    }
     @Override
     public long getChildId(int groupPosition, int childPosition) {
         return childPosition;
@@ -79,11 +81,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             convertView = infalInflater.inflate(R.layout.list_group, null);
         }
 
-        TextView ListHeader = (TextView) convertView.findViewById(R.id.ListHeader);
-        int weirdchar = headerTitle.indexOf("|");
-        String headerTitlenum = headerTitle.substring(0, weirdchar);
-        String headerTitletext = headerTitle.substring(weirdchar + 1);
-        ListHeader.setText(Html.fromHtml("<b>" + headerTitlenum + "</b>" + "<br/>" + headerTitletext));
+        TextView ListHeader = (TextView) convertView
+                .findViewById(R.id.ListHeader);
+        ListHeader.setTypeface(null, Typeface.BOLD);
+        ListHeader.setText(headerTitle);
+
         return convertView;
     }
 
