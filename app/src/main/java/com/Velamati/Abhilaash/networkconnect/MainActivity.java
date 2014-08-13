@@ -141,12 +141,12 @@ public class MainActivity extends FragmentActivity {
         hm = new HashMap<String, ArrayList<String>>();
         for (int x = 0; x < json.length(); x++) {
             try {
-                headers.add(json.getJSONObject(x).getString("notamnumber") + "\n" + json.getJSONObject(x).getString("notamtext"));
+                headers.add(json.getJSONObject(x).getString("eventid") + ":" + json.getJSONObject(x).getString("notamnumber") + ":" + json.getJSONObject(x).getString("notamtext"));
                 values = new ArrayList<String>();
                 Iterator<String> y = json.getJSONObject(x).keys();
                 while(y.hasNext()) {
                     String str = y.next();
-                    if(!headers.contains(json.getJSONObject(x).getString(str)))
+                    if(!json.getJSONObject(x).getString(str).equals(""))
                         values.add(json.getJSONObject(x).getString(str));
                 }
                 hm.put(headers.get(x), values);
@@ -156,48 +156,6 @@ public class MainActivity extends FragmentActivity {
         }
         ExpandableListAdapter listAdapter = new ExpandableListAdapter(this, headers, hm);
         listview.setAdapter(listAdapter);
-        listview.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                 Toast.makeText(getApplicationContext(), "Group Clicked " + headers.get(groupPosition), Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        });
-
-        // Listview Group expanded listener
-        listview.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-            @Override
-            public void onGroupExpand(int groupPosition) {
-                Toast.makeText(getApplicationContext(),
-                        headers.get(groupPosition) + " Expanded",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // Listview Group collasped listener
-        listview.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
-
-            @Override
-            public void onGroupCollapse(int groupPosition) {
-                Toast.makeText(getApplicationContext(),
-                        headers.get(groupPosition) + " Collapsed",
-                        Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-        // Listview on child click listener
-        listview.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v,
-                                        int groupPosition, int childPosition, long id) {
-                // TODO Auto-generated method stub
-                Toast.makeText(getApplicationContext(), headers.get(groupPosition) + " : "+ hm.get(headers.get(groupPosition)).get(childPosition), Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        });
     }
     /**
      * Given a string representation of a URL, sets up a connection and gets

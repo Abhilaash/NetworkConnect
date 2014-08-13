@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,11 +82,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             convertView = infalInflater.inflate(R.layout.list_group, null);
         }
 
-        TextView ListHeader = (TextView) convertView
-                .findViewById(R.id.ListHeader);
-        ListHeader.setTypeface(null, Typeface.BOLD);
-        ListHeader.setText(headerTitle);
-
+        TextView ListHeader = (TextView) convertView.findViewById(R.id.ListHeader);
+        String[] parts = headerTitle.split(":");
+        String htnum = parts[1];
+        String httext = parts[2];
+        ListHeader.setText(Html.fromHtml("<b>" + htnum + "</b> <br>" + httext));
         return convertView;
     }
 
