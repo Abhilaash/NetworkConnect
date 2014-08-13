@@ -26,6 +26,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Sample application demonstrating how to connect to the network and fetch raw
@@ -39,6 +40,7 @@ public class MainActivity extends FragmentActivity {
 
     // Reference to the fragment showing events, so we can clear it with a button
     // as necessary.
+    private ArrayList<String> values;
     private LogFragment mLogFragment;
     private JSONArray json = null;
 //    private TextView textview = null;
@@ -137,16 +139,11 @@ public class MainActivity extends FragmentActivity {
          for (int x = 0; x < json.length(); x++) {
              try {
                  headers.add(json.getJSONObject(x).getString("notamnumber") + "\n" + json.getJSONObject(x).getString("notamtext"));
-                 ArrayList<String> values = new ArrayList<String>();
-                 values.add(json.getJSONObject(x).getString("eventid"));
-                 values.add(json.getJSONObject(x).getString("class"));
-                 values.add(json.getJSONObject(x).getString("startdate"));
-                 values.add(json.getJSONObject(x).getString("enddate"));
-                 values.add(json.getJSONObject(x).getString("affectedfeature"));
-                 values.add(json.getJSONObject(x).getString("geom"));
-
-//                 if(json.getJSONObject(x).getString("image") != null)
-//                     values.add(json.getJSONObject(x).getString("image"));
+                 values = new ArrayList<String>();
+                 Iterator<String> y = json.getJSONObject(x).keys();
+                 while(y.hasNext()) {
+                     values.add(json.getJSONObject(x).getString(y.next()));
+                 }
                      hm.put(json.getJSONObject(x).getString("notamnumber"), values);
              } catch (JSONException e) {
                  e.printStackTrace();
