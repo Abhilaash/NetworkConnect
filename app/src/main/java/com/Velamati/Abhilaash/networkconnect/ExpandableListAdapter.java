@@ -117,9 +117,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         if(bmstrings.size() > 0 && bmstrings.containsKey(eventid)) {
             new DownloadImageTask((ImageView) convertView.findViewById(R.id.imageView)).execute(bmstrings.get(eventid));
-//            String event = parts[0];
-//            Bitmap bmp = bm.get(event);
-//            imgview.setImageBitmap(bmp);
         }
         return convertView;
     }
