@@ -18,6 +18,7 @@ import com.Velamati.Abhilaash.common.logger.MessageOnlyLogFilter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -59,7 +60,6 @@ public class MainActivity extends FragmentActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         //getMenuInflater().inflate(R.menu.options_menu, menu);
         new DownloadTask().execute("http://www.antarice.com/concepts/vnotam/document.json");
-
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
         // Associate searchable configuration with the SearchView
@@ -178,11 +178,16 @@ public class MainActivity extends FragmentActivity {
                 Iterator<String> y = json.getJSONObject(x).keys();
                 while(y.hasNext()) {
                     String str = y.next();
-                    if(!json.getJSONObject(x).getString(str).equals(""))
+                    JSONObject j = json.getJSONObject(x);
+                    if(!j.getString(str).equals("")
+                            && !str.equalsIgnoreCase("eventid")
+                            && !str.equalsIgnoreCase("notamnumber")
+                            && !str.equalsIgnoreCase("notamtext")
+                            && !str.equalsIgnoreCase("affectedfeature"))
                         if(!str.contains("image"))
-                            values.add(json.getJSONObject(x).getString(str));
+                            values.add(str + ": " + j.getString(str));
                         else{
-                            bm.put(json.getJSONObject(x).getString("eventid"), json.getJSONObject(x).getString("image"));
+                            bm.put(j.getString("eventid"), j.getString("image"));
                         }
                 }
                 hm.put(headers.get(x), values);

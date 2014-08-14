@@ -3,8 +3,11 @@ package com.Velamati.Abhilaash.networkconnect;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,6 +81,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
 
         TextView txtListChild = (TextView) convertView.findViewById(R.id.ListItem);
+        Typeface fontreg = Typeface.createFromAsset(context.getAssets(), "fonts/roboto-1.2/Roboto_v1.2/Roboto/Roboto-Regular.ttf");
+        // Create a new spannable with the two strings
+        txtListChild.setTypeface(fontreg);
         txtListChild.setText(childText);
         return convertView;
     }
@@ -113,9 +119,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         String eventid = parts[0];
         String htnum = parts[1];
         String httext = parts[2];
-        ListHeader.setText(Html.fromHtml("<b>" + htnum + "</b> <br>" + httext));
+        Typeface fontbold = Typeface.createFromAsset(context.getAssets(), "fonts/roboto-1.2/Roboto_v1.2/Roboto/Roboto-Bold.ttf");
+        Typeface fontreg = Typeface.createFromAsset(context.getAssets(), "fonts/roboto-1.2/Roboto_v1.2/Roboto/Roboto-Regular.ttf");
+        // Create a new spannable with the two strings
+        Spannable spannable = new SpannableString(htnum + "\n" + httext);
 
-        if(bmstrings.size() > 0 && bmstrings.containsKey(eventid)) {
+// Set the custom typeface to span over a section of the spannable object
+        spannable.setSpan( new CustomTypefaceSpan("roboto", fontbold), 0, htnum.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan( new CustomTypefaceSpan("roboto",fontreg), htnum.length(), htnum.length() + httext.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ListHeader.setText(spannable);
+//        ListHeader.setText(<font>='fontbold'>"+ htnum + "</font> <br> <font face='fontreg'>" + httext + "</font"));
+        if(bmstrings.containsKey(eventid)) {
             new DownloadImageTask((ImageView) convertView.findViewById(R.id.imageView)).execute(bmstrings.get(eventid));
         }
         return convertView;
@@ -128,7 +142,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return true;
+        return false;
     }
 
 }

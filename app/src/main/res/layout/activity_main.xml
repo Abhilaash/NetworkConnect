@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F6F6F6"
+    android:background="@color/background"
     android:baselineAligned="false">
 
     <ExpandableListView
@@ -11,7 +11,8 @@
         android:id="@+id/listview"
         android:layout_weight="1"
         android:padding="10dp"
-        android:dividerHeight="5sp"/>
+        android:dividerHeight="5sp"
+        android:divider="@color/background"/>
     <fragment
         android:id="@+id/log_fragment"
         android:name="com.Velamati.Abhilaash.common.logger.LogFragment"
