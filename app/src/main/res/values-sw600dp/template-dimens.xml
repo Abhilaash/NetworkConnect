@@ -16,7 +16,9 @@
 
 <resources>
 
-    <!-- Activity themes -->
-    <style name="Theme.Base" parent="android:Theme.Holo.Light" />
+    <!-- Semantic definitions -->
+
+    <dimen name="horizontal_page_margin">64dp</dimen>
+    <dimen name="vertical_page_margin">16dp</dimen>
 
 </resources>
