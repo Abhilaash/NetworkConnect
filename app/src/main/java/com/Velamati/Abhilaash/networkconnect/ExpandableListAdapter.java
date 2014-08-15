@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
@@ -18,7 +17,6 @@ import android.widget.TextView;
 import com.Velamati.Abhilaash.common.logger.Log;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,14 +25,20 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<String> listDataHeader; // header titles
     // child data in format of header title, child title
-    private HashMap<String, ArrayList<String>> listDataChild;
+    private HashMap<String, Notam> listDataChild;
     private HashMap<String, String> bmstrings;
 
-    public ExpandableListAdapter(Context _context, List<String> _listDataHeader, HashMap<String, ArrayList<String>> _listChildData, HashMap<String, String> bmpstrings) {
+    public ExpandableListAdapter(Context _context, List<String> _listDataHeader, HashMap<String, Notam>_listChildData/*, HashMap<String, String> bmpstrings*/) {
         this.context = _context;
         this.listDataHeader = _listDataHeader;
         this.listDataChild = _listChildData;
-        bmstrings = bmpstrings;
+        bmstrings = new HashMap<String, String>();
+        for(Notam notam : listDataChild.values())
+        {
+            if(notam.getUrl() != null){
+                bmstrings.put(notam.getEventid(), notam.getUrl());
+            }
+        }
     }
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
@@ -61,8 +65,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
     }
     @Override
-    public Object getChild(int groupPosition, int childPosititon) {
-        return this.listDataChild.get(this.listDataHeader.get(groupPosition)).get(childPosititon);
+    public Object getChild(int groupPosition, int childPosition) {
+        return this.listDataChild.get(this.listDataHeader.get(groupPosition));
     }
 
     @Override
@@ -73,7 +77,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
-        final String childText = (String) getChild(groupPosition, childPosition);
+        final String childText = getChild(groupPosition, childPosition).toString();
 
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -90,7 +94,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return this.listDataChild.get(this.listDataHeader.get(groupPosition)).size();
+        return 1;
     }
 
     @Override
@@ -128,7 +132,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         spannable.setSpan( new CustomTypefaceSpan("roboto", fontbold), 0, htnum.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan( new CustomTypefaceSpan("roboto",fontreg), htnum.length(), htnum.length() + httext.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         ListHeader.setText(spannable);
-//        ListHeader.setText(<font>='fontbold'>"+ htnum + "</font> <br> <font face='fontreg'>" + httext + "</font"));
+
         if(bmstrings.containsKey(eventid)) {
             new DownloadImageTask((ImageView) convertView.findViewById(R.id.imageView)).execute(bmstrings.get(eventid));
         }

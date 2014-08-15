@@ -28,7 +28,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * Sample application demonstrating how to connect to the network and fetch raw
@@ -169,33 +168,17 @@ public class MainActivity extends FragmentActivity {
     private void display()
     {
         ArrayList<String> headers = new ArrayList<String>();
-        HashMap<String, ArrayList<String>> hm = new HashMap<String, ArrayList<String>>();
-        HashMap<String, String> bm = new HashMap<String, String>();
+        HashMap<String, Notam> notam = new HashMap<String, Notam>();
         for (int x = 0; x < json.length(); x++) {
             try {
-                headers.add(json.getJSONObject(x).getString("eventid") + ":" + json.getJSONObject(x).getString("notamnumber") + ":" + json.getJSONObject(x).getString("notamtext"));
-                ArrayList<String> values = new ArrayList<String>();
-                Iterator<String> y = json.getJSONObject(x).keys();
-                while(y.hasNext()) {
-                    String str = y.next();
-                    JSONObject j = json.getJSONObject(x);
-                    if(!j.getString(str).equals("")
-                            && !str.equalsIgnoreCase("eventid")
-                            && !str.equalsIgnoreCase("notamnumber")
-                            && !str.equalsIgnoreCase("notamtext")
-                            && !str.equalsIgnoreCase("affectedfeature"))
-                        if(!str.contains("image"))
-                            values.add(str + ": " + j.getString(str));
-                        else{
-                            bm.put(j.getString("eventid"), j.getString("image"));
-                        }
-                }
-                hm.put(headers.get(x), values);
+                JSONObject j = json.getJSONObject(x);
+                headers.add(j.getString("eventid") + ":" + j.getString("notamnumber") + ":" + j.getString("notamtext"));
+                notam.put(headers.get(x), new Notam(j));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        ExpandableListAdapter listAdapter = new ExpandableListAdapter(this, headers, hm, bm);
+        ExpandableListAdapter listAdapter = new ExpandableListAdapter(this, headers, notam);
         listview.setAdapter(listAdapter);
     }
 
@@ -210,16 +193,6 @@ public class MainActivity extends FragmentActivity {
         // Wraps Android's native log framework
         LogWrapper logWrapper = new LogWrapper();
         Log.setLogNode(logWrapper);
-//////ISSUE#1
-//        JSONObject j;
-//        for (int x = 0; x < json.length(); x++) {
-//            try {
-//                j = json.getJSONObject(x);
-//                textview.append(j.getString("notamnumber") + "\n" + j.getString("notamtext") + "\n");
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//        }
         // A filter that strips out everything except the message text.
         MessageOnlyLogFilter msgFilter = new MessageOnlyLogFilter();
         logWrapper.setNext(msgFilter);
@@ -242,3 +215,22 @@ public class MainActivity extends FragmentActivity {
 //                 e.printStackTrace();
 //             }
 //         }
+
+
+//        HashMap<String, ArrayList<String>> hm = new HashMap<String, ArrayList<String>>();
+//        HashMap<String, String> bm = new HashMap<String, String>();
+//Iterator<String> y = json.getJSONObject(x).keys();
+//while(y.hasNext()) {
+//        String str = y.next();
+//        JSONObject j = json.getJSONObject(x);
+//        if(!j.getString(str).equals("")
+//        && !str.equalsIgnoreCase("eventid")
+//        && !str.equalsIgnoreCase("notamnumber")
+//        && !str.equalsIgnoreCase("notamtext")
+//        && !str.equalsIgnoreCase("affectedfeature"))
+//        if(!str.contains("image"))
+//        values.add(str + ": " + j.getString(str));
+//        else{
+//        bm.put(j.getString("eventid"), j.getString("image"));
+//        }
+//        }
