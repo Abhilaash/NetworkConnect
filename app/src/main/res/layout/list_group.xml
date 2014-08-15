@@ -10,8 +10,10 @@
         android:id="@+id/ListHeader"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
-        android:textSize="17sp"/>
+        android:textSize="15sp"
+        android:drawableLeft="@drawable/ic_rwy"
+        android:drawablePadding="10sp"/>
+        <!--android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"-->
 
     <ImageView
         android:layout_width="fill_parent"

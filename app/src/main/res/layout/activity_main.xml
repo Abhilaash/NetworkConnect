@@ -13,7 +13,7 @@
         android:padding="10dp"
         android:dividerHeight="5sp"
         android:divider="@color/background"
-        android:childDivider="#00000000" />
+        android:childDivider="#00000000"/>
     <fragment
         android:id="@+id/log_fragment"
         android:name="com.Velamati.Abhilaash.common.logger.LogFragment"
