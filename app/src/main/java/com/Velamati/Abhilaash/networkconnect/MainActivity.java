@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -100,6 +101,8 @@ public class MainActivity extends FragmentActivity {
                 display();
             } catch (JSONException e) {
                 e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -165,18 +168,13 @@ public class MainActivity extends FragmentActivity {
         return a;
     }
 
-    private void display()
-    {
+    private void display() throws ParseException, JSONException {
         ArrayList<String> headers = new ArrayList<String>();
         HashMap<String, Notam> notam = new HashMap<String, Notam>();
         for (int x = 0; x < json.length(); x++) {
-            try {
                 JSONObject j = json.getJSONObject(x);
                 headers.add(j.getString("eventid") + ":" + j.getString("notamnumber") + ":" + j.getString("notamtext"));
                 notam.put(headers.get(x), new Notam(j));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
         }
         ExpandableListAdapter listAdapter = new ExpandableListAdapter(this, headers, notam);
         listview.setAdapter(listAdapter);

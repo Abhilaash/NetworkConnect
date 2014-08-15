@@ -3,40 +3,58 @@ package com.Velamati.Abhilaash.networkconnect;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 public class Notam {
     private String eventid;
     private String notamnumber;
     private String aclass;
     private String startdate;
+    private DateFormat startdateformat;
     private String enddate;
+    private DateFormat enddateformat;
     private String notamtext;
     private String affectedfeature;
     private String url;
     private String geom;
 
-//    public Notam(String Eventid, String Notamnumber, String Class, String Startdate, String Enddate, String Notamtext, String Affectedfeature, String Url, String Geom){
-//        eventid = Eventid;
-//        notamnumber = Notamnumber;
-//        aclass = Class;
-//        startdate = Startdate.substring(4, 6) + "/" + Startdate.substring(2, 4) + "/" + Startdate.substring(0, 2) + Startdate.substring(6, 8) + ":" + Startdate.substring(8);
-//        enddate = Enddate.substring(4, 6) + "/" + Enddate.substring(2, 4) + "/" + Enddate.substring(0, 2) + Enddate.substring(6, 8) + ":" + Enddate.substring(8);
-//        notamtext = Notamtext;
-//        affectedfeature = Affectedfeature;
-//        url = Url;
-//        geom = Geom;
-//    }
-
-    public Notam(JSONObject j) throws JSONException{
+    public Notam(JSONObject j) throws JSONException, ParseException {
         if(j.getString("eventid") != null)
             eventid = j.getString("eventid");
         if(j.getString("notamnumber") != null)
             notamnumber = j.getString("notamnumber");
         if(j.getString("class") != null)
             aclass = j.getString("class");
-        if(j.getString("startdate") != null)
-            startdate = j.getString("startdate");
-        if(j.getString("enddate") != null)
-            enddate = j.getString("enddate");
+        if(j.getString("startdate") != null) {
+            String Startdate = j.getString("startdate").trim();
+//            Date start = new Date(-1, -1, -1);
+//            start.setYear(Integer.parseInt(Startdate.substring(0, 2)));
+//            start.setMonth(Integer.parseInt(Startdate.substring(2, 4)));
+//            start.setDate(Integer.parseInt(Startdate.substring(4, 6)));
+//            start.setHours(Integer.parseInt(Startdate.substring(6, 8)));
+//            start.setMinutes(Integer.parseInt(Startdate.substring(8)));
+//            startdate = start.toGMTString();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm");
+            Date start = simpleDateFormat.parse(Startdate);
+            startdate = start.toGMTString();
+            //startdate = Startdate.substring(2, 4) + "/" + Startdate.substring(4, 6) + "/" + Startdate.substring(0, 2) + "\t" + Startdate.substring(6, 8) + ":" + Startdate.substring(8);
+        }
+        if(j.getString("enddate") != null) {
+            String Enddate = j.getString("enddate").trim();
+//            Date end = new Date(-1, -1, -1);
+//            end.setYear(Integer.parseInt(Enddate.substring(0, 2)));
+//            end.setMonth(Integer.parseInt(Enddate.substring(2, 4)));
+//            end.setDate(Integer.parseInt(Enddate.substring(4, 6)));
+//            end.setHours(Integer.parseInt(Enddate.substring(6, 8)));
+//            end.setMinutes(Integer.parseInt(Enddate.substring(8)));
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm");
+            Date end = (Date) simpleDateFormat.parse(Enddate);
+            enddate = end.toGMTString();
+//         enddate = Enddate.substring(2, 4) + "/" + Enddate.substring(4, 6) + "/" + Enddate.substring(0, 2) + "\t" + Enddate.substring(6, 8) + ":" + Enddate.substring(8);
+        }
         if(j.getString("notamtext") != null)
             notamtext = j.getString("notamtext");
         if(j.getString("affectedfeature") != null)
@@ -56,29 +74,19 @@ public class Notam {
             geom = "";
     }
 
-//    public String toStringhead(){
-//        return new String(getNotamnumber() + "\n" + getNotamtext());
-//    }
-
     public String toString()
     {
         return getStartdate() + "\n" + getEnddate() + "\n" + getclass();
-//        String s = "";
-//        if(this.getStartdate() != null && !startdate.equals(""))
-//            s += "Start Date: " + startdate;
-//
-//        if(enddate != null && !enddate.equals(""))
-//            s += "End Date: " + enddate;
-//
-//        if(aclass != null && !aclass.equals(""))
-//            s += "Class: " + aclass;
-//        return s;
     }
 
     public String getEventid() {
         if(eventid != null)
             return "EventID: " + eventid;
         return null;
+    }
+
+    public String getOnlyEventid(){
+        return eventid;
     }
 
     public void setEventid(String eventid) {

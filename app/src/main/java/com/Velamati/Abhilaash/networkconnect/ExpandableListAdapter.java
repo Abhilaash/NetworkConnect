@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,9 +36,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         bmstrings = new HashMap<String, String>();
         for(Notam notam : listDataChild.values())
         {
-            if(notam.getUrl() != null){
-                bmstrings.put(notam.getEventid(), notam.getUrl());
-            }
+            if(notam.getUrl() != null)
+                bmstrings.put(notam.getOnlyEventid(), notam.getUrl());
         }
     }
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
@@ -127,7 +127,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         Typeface fontreg = Typeface.createFromAsset(context.getAssets(), "fonts/roboto-1.2/Roboto_v1.2/Roboto/Roboto-Regular.ttf");
         // Create a new spannable with the two strings
         Spannable spannable = new SpannableString(htnum + "\n" + httext);
-
 // Set the custom typeface to span over a section of the spannable object
         spannable.setSpan( new CustomTypefaceSpan("roboto", fontbold), 0, htnum.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan( new CustomTypefaceSpan("roboto",fontreg), htnum.length(), htnum.length() + httext.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
