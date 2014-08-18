@@ -24,12 +24,14 @@ import java.util.List;
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     private Context context;
+    private ExpandableListView exp;
     private List<String> listDataHeader; // header titles
     // child data in format of header title, child title
     private HashMap<String, Notam> listDataChild;
     private HashMap<String, String> bmstrings;
+    private HashMap<String, Bitmap> bitmapHashMap = new HashMap<String, Bitmap>();
 
-    public ExpandableListAdapter(Context _context, List<String> _listDataHeader, HashMap<String, Notam>_listChildData/*, HashMap<String, String> bmpstrings*/) {
+    public ExpandableListAdapter(Context _context, List<String> _listDataHeader, HashMap<String, Notam>_listChildData, ExpandableListView exp) {
         this.context = _context;
         this.listDataHeader = _listDataHeader;
         this.listDataChild = _listChildData;
@@ -39,6 +41,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             if(notam.getUrl() != null)
                 bmstrings.put(notam.getOnlyEventid(), notam.getUrl());
         }
+        this.exp = exp;
     }
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
@@ -47,17 +50,23 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             this.bmImage = bmImage;
         }
 
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap bm = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                bm = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
+        protected Bitmap doInBackground(String... eventid) {
+            if(!bitmapHashMap.containsKey(eventid[0])) {
+                Bitmap bm = null;
+                if (bmstrings.containsKey(eventid[0])) {
+                    String urldisplay = bmstrings.get(eventid[0]);
+                    try {
+                        InputStream in = new java.net.URL(urldisplay).openStream();
+                        bm = BitmapFactory.decodeStream(in);
+                    } catch (Exception e) {
+                        Log.e("Error", e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+                bitmapHashMap.put(eventid[0], bm);
+                return bm;
             }
-            return bm;
+            return bitmapHashMap.get(eventid[0]);
         }
 
         protected void onPostExecute(Bitmap result) {
@@ -129,12 +138,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         Spannable spannable = new SpannableString(htnum + "\n" + httext);
 // Set the custom typeface to span over a section of the spannable object
         spannable.setSpan( new CustomTypefaceSpan("roboto", fontbold), 0, htnum.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan( new CustomTypefaceSpan("roboto",fontreg), htnum.length(), htnum.length() + httext.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new CustomTypefaceSpan("roboto", fontreg), htnum.length(), htnum.length() + httext.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         ListHeader.setText(spannable);
-
-        if(bmstrings.containsKey(eventid)) {
-            new DownloadImageTask((ImageView) convertView.findViewById(R.id.imageView)).execute(bmstrings.get(eventid));
-        }
+        new DownloadImageTask((ImageView) convertView.findViewById(R.id.imageView)).execute(eventid);
         return convertView;
     }
 

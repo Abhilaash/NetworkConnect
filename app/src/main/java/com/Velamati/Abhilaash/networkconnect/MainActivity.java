@@ -176,7 +176,7 @@ public class MainActivity extends FragmentActivity {
                 headers.add(j.getString("eventid") + ":" + j.getString("notamnumber") + ":" + j.getString("notamtext"));
                 notam.put(headers.get(x), new Notam(j));
         }
-        ExpandableListAdapter listAdapter = new ExpandableListAdapter(this, headers, notam);
+        ExpandableListAdapter listAdapter = new ExpandableListAdapter(this, headers, notam, listview);
         listview.setAdapter(listAdapter);
     }
 
