@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="8dp"
-    android:background="@color/white">
+    android:background="@color/background">
     <!--android:background=@color/background-->
 
     <TextView
@@ -13,8 +13,8 @@
         android:layout_height="wrap_content"
         android:textSize="15sp"
         android:drawableLeft="@drawable/ic_rwy"
-        android:drawablePadding="10dp"/>
-    <!--android:background="@drawable/rounded_corner_group"/>-->
+        android:drawablePadding="10dp"
+        android:background="@drawable/rounded_corner_group"/>
 
     <ImageView
         android:layout_width="fill_parent"

@@ -56,21 +56,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="MainActivity.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/Velamati/Abhilaash/networkconnect/MainActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-6.928571" vertical-offset="248" max-vertical-offset="3587">
-              <caret line="54" column="31" selection-start-line="54" selection-start-column="31" selection-end-line="54" selection-end-column="31" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="rounded_corner_group.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/rounded_corner_group.xml">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="374">
-              <caret line="9" column="5" selection-start-line="9" selection-start-column="5" selection-end-line="9" selection-end-column="5" />
+              <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -80,60 +70,20 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/rounded_corner_item.xml">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0" vertical-offset="17" max-vertical-offset="374">
-              <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
+              <caret line="12" column="23" selection-start-line="12" selection-start-column="23" selection-end-line="12" selection-end-column="23" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ExpandableListAdapter.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/Velamati/Abhilaash/networkconnect/ExpandableListAdapter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.321429" vertical-offset="1494" max-vertical-offset="2686">
-              <caret line="99" column="40" selection-start-line="99" selection-start-column="40" selection-end-line="99" selection-end-column="40" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#1072#1088#0" expanded="true" />
-                <element signature="e#2976#2977#0" expanded="true" />
-                <element signature="e#3012#3013#0" expanded="true" />
-                <element signature="e#3947#3948#0" expanded="true" />
-                <element signature="e#3971#3972#0" expanded="true" />
-                <element signature="e#4034#4035#0" expanded="true" />
-                <element signature="e#4095#4096#0" expanded="true" />
-                <element signature="e#4143#4144#0" expanded="true" />
-                <element signature="e#4192#4193#0" expanded="true" />
-                <element signature="e#4255#4256#0" expanded="true" />
-                <element signature="e#4291#4292#0" expanded="true" />
-                <element signature="e#5928#5929#0" expanded="true" />
-                <element signature="e#5956#5957#0" expanded="true" />
-                <element signature="e#6048#6049#0" expanded="true" />
-                <element signature="e#6076#6077#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="activity_main.xml" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="activity_main.xml" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
           <provider editor-type-id="android-designer">
             <state />
           </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.7454545" vertical-offset="74" max-vertical-offset="527">
-              <caret line="10" column="34" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="list_item.xml" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/list_item.xml">
-          <provider editor-type-id="android-designer">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="391">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.39043826" vertical-offset="157" max-vertical-offset="527">
+              <caret line="15" column="48" selection-start-line="15" selection-start-column="48" selection-end-line="15" selection-end-column="48" />
               <folding />
             </state>
           </provider>
@@ -145,8 +95,21 @@
             <state />
           </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.2363634" vertical-offset="22" max-vertical-offset="527">
-              <caret line="15" column="38" selection-start-line="15" selection-start-column="38" selection-end-line="15" selection-end-column="38" />
+            <state vertical-scroll-proportion="-1.2363636" vertical-offset="0" max-vertical-offset="527">
+              <caret line="4" column="34" selection-start-line="4" selection-start-column="34" selection-end-line="4" selection-end-column="34" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="list_item.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/list_item.xml">
+          <provider editor-type-id="android-designer">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-2.5185184" vertical-offset="0" max-vertical-offset="391">
+              <caret line="4" column="30" selection-start-line="4" selection-start-column="30" selection-end-line="4" selection-end-column="30" />
               <folding />
             </state>
           </provider>
@@ -871,11 +834,11 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/Velamati/Abhilaash/networkconnect/CustomTextView.java" />
         <option value="$PROJECT_DIR$/app/build/generated/source/r/debug/com/Velamati/Abhilaash/networkconnect/R.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/drawable/rounded_corner.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/drawable/rounded_corner_item.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/list_group.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/drawable/rounded_corner_group.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/list_item.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/list_group.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/drawable/rounded_corner_item.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
       </list>
     </option>
   </component>
@@ -1843,14 +1806,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/Velamati/Abhilaash/networkconnect/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.928571" vertical-offset="248" max-vertical-offset="3587">
-          <caret line="54" column="31" selection-start-line="54" selection-start-column="31" selection-end-line="54" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/Velamati/Abhilaash/networkconnect/ExpandableListAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-4.321429" vertical-offset="1494" max-vertical-offset="2686">
@@ -1876,21 +1831,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/Velamati/Abhilaash/networkconnect/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.7454545" vertical-offset="74" max-vertical-offset="527">
-          <caret line="10" column="34" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/rounded_corner_item.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="17" max-vertical-offset="374">
-          <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
+        <state vertical-scroll-proportion="0.6978417" vertical-offset="248" max-vertical-offset="3587">
+          <caret line="54" column="31" selection-start-line="54" selection-start-column="31" selection-end-line="54" selection-end-column="31" />
           <folding />
         </state>
       </provider>
@@ -1898,18 +1842,7 @@
     <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/rounded_corner_group.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="374">
-          <caret line="9" column="5" selection-start-line="9" selection-start-column="5" selection-end-line="9" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/list_group.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.2363634" vertical-offset="22" max-vertical-offset="527">
-          <caret line="15" column="38" selection-start-line="15" selection-start-column="38" selection-end-line="15" selection-end-column="38" />
+          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1919,8 +1852,38 @@
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="391">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state vertical-scroll-proportion="-2.5185184" vertical-offset="0" max-vertical-offset="391">
+          <caret line="4" column="30" selection-start-line="4" selection-start-column="30" selection-end-line="4" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/list_group.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.2363636" vertical-offset="0" max-vertical-offset="527">
+          <caret line="4" column="34" selection-start-line="4" selection-start-column="34" selection-end-line="4" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/rounded_corner_item.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="17" max-vertical-offset="374">
+          <caret line="12" column="23" selection-start-line="12" selection-start-column="23" selection-end-line="12" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.39043826" vertical-offset="157" max-vertical-offset="527">
+          <caret line="15" column="48" selection-start-line="15" selection-start-column="48" selection-end-line="15" selection-end-column="48" />
           <folding />
         </state>
       </provider>
