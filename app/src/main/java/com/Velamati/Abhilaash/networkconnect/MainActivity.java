@@ -42,6 +42,7 @@ public class MainActivity extends FragmentActivity {
 
     private JSONArray json = null;
     private ExpandableListView listview = null;
+    public static String myUrl = "http://www.antarice.com/concepts/vnotam/document.json";
 //    private Bitmap bmp;
 
     @Override
@@ -59,7 +60,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //getMenuInflater().inflate(R.menu.options_menu, menu);
-        new DownloadTask().execute("http://www.antarice.com/concepts/vnotam/document.json");
+        new DownloadTask().execute(myUrl);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
         // Associate searchable configuration with the SearchView
@@ -86,6 +87,7 @@ public class MainActivity extends FragmentActivity {
             try {
                 return loadFromNetwork(urls[0]);
             } catch (IOException e) {
+                myUrl = "http://www.antarice.com/concepts/vnotam/document.json";
                 return "Connection Error";
             }
         }
@@ -172,9 +174,9 @@ public class MainActivity extends FragmentActivity {
         ArrayList<String> headers = new ArrayList<String>();
         HashMap<String, Notam> notam = new HashMap<String, Notam>();
         for (int x = 0; x < json.length(); x++) {
-                JSONObject j = json.getJSONObject(x);
-                headers.add(j.getString("eventid") + ":" + j.getString("notamnumber") + ":" + j.getString("notamtext"));
-                notam.put(headers.get(x), new Notam(j));
+            JSONObject j = json.getJSONObject(x);
+            headers.add(j.getString("eventid") + ":" + j.getString("notamnumber") + ":" + j.getString("notamtext"));
+            notam.put(headers.get(x), new Notam(j));
         }
         ExpandableListAdapter listAdapter = new ExpandableListAdapter(this, headers, notam, listview);
         listview.setAdapter(listAdapter);

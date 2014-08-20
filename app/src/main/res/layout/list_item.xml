@@ -14,5 +14,6 @@
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft"
-        android:background="@drawable/rounded_corner_item"/>
+        android:background="@drawable/rounded_corner_item"
+        android:onClick="activity_map/map"/>
 </LinearLayout>

@@ -4,6 +4,8 @@
     <string name="title_activity_search_results">SearchResultsActivity</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_map_view">MapView</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_map">MapActivity</string>
+    <string name="app_name">VisualNOTAM</string>
+    <string name="APIKey">AIzaSyCl7935pCrQEr1f5JOL8Qf4pGSUibbLIj0</string>
 
 </resources>

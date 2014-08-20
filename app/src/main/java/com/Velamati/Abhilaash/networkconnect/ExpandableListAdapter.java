@@ -15,8 +15,6 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.Velamati.Abhilaash.common.logger.Log;
-
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -59,7 +57,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         InputStream in = new java.net.URL(urldisplay).openStream();
                         bm = BitmapFactory.decodeStream(in);
                     } catch (Exception e) {
-                        Log.e("Error", e.getMessage());
                         e.printStackTrace();
                     }
                 }
@@ -151,12 +148,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
-//        displayMap(groupPosition);
         return false;
-    }
-
-    public void displayMap(int pos){
-
     }
 
 }

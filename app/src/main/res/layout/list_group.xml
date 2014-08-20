@@ -13,11 +13,5 @@
         android:drawableLeft="@drawable/ic_rwy"
         android:drawablePadding="10dp"
         android:background="@drawable/rounded_corner_group"/>
-    <ImageView
-        android:id="@+id/Imagemap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/map"/>
-        <!--android:onClick="MapView"/>-->
 
 </RelativeLayout>
