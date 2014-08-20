@@ -140,7 +140,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         spannable.setSpan( new CustomTypefaceSpan("roboto", fontbold), 0, htnum.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(new CustomTypefaceSpan("roboto", fontreg), htnum.length(), htnum.length() + httext.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         ListHeader.setText(spannable);
-        new DownloadImageTask((ImageView) convertView.findViewById(R.id.imageView)).execute(eventid);
+//        new DownloadImageTask((ImageView) convertView.findViewById(R.id.imageView)).execute(eventid);
         return convertView;
     }
 
@@ -151,7 +151,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
+//        displayMap(groupPosition);
         return false;
+    }
+
+    public void displayMap(int pos){
+
     }
 
 }

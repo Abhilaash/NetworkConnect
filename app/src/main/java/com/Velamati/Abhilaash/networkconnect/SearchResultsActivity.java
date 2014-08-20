@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import com.Velamati.Abhilaash.networkconnect.R;
 
 public class SearchResultsActivity extends Activity {
 
@@ -27,6 +26,7 @@ public class SearchResultsActivity extends Activity {
             String query = intent.getStringExtra(SearchManager.QUERY);
             //use the query to search your data somehow
         }
+
     }
 
     @Override
