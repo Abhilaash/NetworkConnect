@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="title_activity_search_results">SearchResultsActivity</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_map_view">MapView</string>
     <string name="title_activity_map">MapActivity</string>
@@ -9,6 +8,6 @@
     <string name="APIKey">AIzaSyCl7935pCrQEr1f5JOL8Qf4pGSUibbLIj0</string>
     <string name="search_describer">Airport ID</string>
     <string name="title_activity_searchable_results">SearchableResults</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="search_label">NOTAM</string>
 
 </resources>

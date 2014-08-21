@@ -1,41 +1,61 @@
 package com.Velamati.Abhilaash.networkconnect;
 
-import android.app.ListActivity;
+import android.app.ActionBar;
+import android.app.Activity;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.SearchView;
 
 
-public class SearchableResults extends ListActivity {
+public class SearchableResults extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_searchable_results);
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         // Get the intent, verify the action and get the query
-        handleIntent(getIntent());
-    }
+        Uri uri = getIntent().getData();
+        Cursor cursor = managedQuery(uri, null, null, null, null);
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        setIntent(intent);
-        handleIntent(intent);
-    }
-
-    private void handleIntent(Intent intent) {
-
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            //use the query to search your data somehow
-             doMySearch(query);
+        if (cursor == null) {
+            finish();
+        } else {
+            cursor.moveToFirst();
         }
     }
 
-    public String doMySearch(String query) {
-        String Url = MainActivity.myUrl;
-        Url = "https://notamdemo.aim.nas.faa.gov/bdedev/dbjsonlink?key=VNOTAM_API&location=" + query;
-        MainActivity.myUrl = Url;
-        setTitle(Url);
-        return Url;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+
+            SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            searchView.setIconifiedByDefault(false);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.search:
+                onSearchRequested();
+                return true;
+            case android.R.id.home:
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+            default:
+                return false;
+        }
     }
 }

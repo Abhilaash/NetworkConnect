@@ -2,6 +2,7 @@ package com.Velamati.Abhilaash.networkconnect;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -20,30 +21,35 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Sample application demonstrating how to connect to the network and fetch raw
- * HTML. It uses AsyncTask to do the fetch on a background thread. To establish
- * the network connection, it uses HttpURLConnection.
- * <p/>
- * This sample uses the logging framework to display log output in the log
- * fragment (LogFragment).
- */
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
+
 public class MainActivity extends FragmentActivity {
 
     private JSONArray json = null;
     private ExpandableListView listview = null;
-    public static String myUrl = "http://www.antarice.com/concepts/vnotam/document.json";
-//    private Bitmap bmp;
+    private String myUrlAirport = "https://notamdemo.aim.nas.faa.gov/bdedev/dbjsonlink?key=AIRPORT_LIST&search=";
+    private String myUrlNotam = "https://notamdemo.aim.nas.faa.gov/bdedev/dbjsonlink?key=VNOTAM_API&location=";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,28 +58,35 @@ public class MainActivity extends FragmentActivity {
 
         //Initialize expandable list view to display notams.
         listview = (ExpandableListView) findViewById(R.id.listview);
-
+        handleIntent(getIntent());
         // Initialize the logging framework.
         initializeLogging();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        new DownloadTask().execute(myUrl);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
+
         // Associate searchable configuration with the SearchView
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(false);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        return id == R.id.action_settings || super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.search:
+                onSearchRequested();
+                return true;
+            default:
+                return false;
+        }
     }
+
 
     /**
      * Implementation of AsyncTask, to fetch the data in the background away from
@@ -86,7 +99,6 @@ public class MainActivity extends FragmentActivity {
             try {
                 return loadFromNetwork(urls[0]);
             } catch (IOException e) {
-                myUrl = "http://www.antarice.com/concepts/vnotam/document.json";
                 return "Connection Error";
             }
         }
@@ -135,6 +147,56 @@ public class MainActivity extends FragmentActivity {
      * @throws java.io.IOException
      */
     private InputStream downloadUrl(String urlString) throws IOException {
+        // Load CAs from an InputStream
+// (could be from a resource or ByteArrayInputStream or ...)
+        CertificateFactory cf = null;
+        try {
+            cf = CertificateFactory.getInstance("X.509");
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        }
+// From https://www.washington.edu/itconnect/security/ca/load-der.crt
+        InputStream caInput = new BufferedInputStream(new FileInputStream("load-der.crt"));
+        Certificate ca;
+        try {
+            ca = cf.generateCertificate(caInput);
+            System.out.println("ca=" + ((X509Certificate) ca).getSubjectDN());
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        } finally {
+            caInput.close();
+        }
+
+// Create a KeyStore containing our trusted CAs
+        String keyStoreType = KeyStore.getDefaultType();
+        KeyStore keyStore = null;
+        try {
+            keyStore = KeyStore.getInstance(keyStoreType);
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        }
+        try {
+            keyStore.load(null, null);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        }
+        keyStore.setCertificateEntry("ca", ca);
+
+// Create a TrustManager that trusts the CAs in our KeyStore
+        String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+        TrustManagerFactory tmf = null;
+        try {
+            tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        tmf.init(keyStore);
+
+// Create an SSLContext that uses our TrustManager
+        SSLContext context = SSLContext.getInstance("TLS");
+        context.init(null, tmf.getTrustManagers(), null);
         URL url = new URL(urlString);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setReadTimeout(10000 /* milliseconds */);
@@ -146,7 +208,7 @@ public class MainActivity extends FragmentActivity {
         return conn.getInputStream();
     }
 
-    /**
+     /**
      * Reads an InputStream and converts it to a String.
      *
      * @param stream InputStream containing HTML from targeted site.
@@ -181,6 +243,25 @@ public class MainActivity extends FragmentActivity {
         listview.setAdapter(listAdapter);
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+            // handles a click on a search suggestion; launches activity to show word
+            Intent airportIntent = new Intent(this, SearchableResults.class);
+            airportIntent.setData(intent.getData());
+            startActivity(airportIntent);
+        } else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            // handles a search query
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            String myUrlNotamtemp = myUrlNotam + query.toUpperCase();
+            new DownloadTask().execute(myUrlNotamtemp);
+        }
+    }
+
     /**
      * Create a chain of targets that will receive log data
      */
@@ -201,35 +282,3 @@ public class MainActivity extends FragmentActivity {
         msgFilter.setNext(mLogFragment.getLogView());
     }
 }
-
-//         for(int x = 0; x < json.length(); x++)
-//         {
-//             JSONObject obj = null;
-//             try {
-//                 obj = json.getJSONObject(x);
-//                 if (obj != null) {
-//                     textview.append(obj.getString("notamtext") + "\n" + (obj.getString("notamnumber")) + "\n");
-//                 }
-//             } catch (JSONException e) {
-//                 e.printStackTrace();
-//             }
-//         }
-
-
-//        HashMap<String, ArrayList<String>> hm = new HashMap<String, ArrayList<String>>();
-//        HashMap<String, String> bm = new HashMap<String, String>();
-//Iterator<String> y = json.getJSONObject(x).keys();
-//while(y.hasNext()) {
-//        String str = y.next();
-//        JSONObject j = json.getJSONObject(x);
-//        if(!j.getString(str).equals("")
-//        && !str.equalsIgnoreCase("eventid")
-//        && !str.equalsIgnoreCase("notamnumber")
-//        && !str.equalsIgnoreCase("notamtext")
-//        && !str.equalsIgnoreCase("affectedfeature"))
-//        if(!str.contains("image"))
-//        values.add(str + ": " + j.getString(str));
-//        else{
-//        bm.put(j.getString("eventid"), j.getString("image"));
-//        }
-//        }

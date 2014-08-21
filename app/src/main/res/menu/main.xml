@@ -8,8 +8,9 @@
         android:title="Settings" />
 
     <item android:id="@+id/search"
-        android:title="@string/search_describer"
+        android:title="Search"
         android:icon="@android:drawable/ic_menu_search"
         android:showAsAction="collapseActionView|ifRoom"
         android:actionViewClass="android.widget.SearchView" />
+
 </menu>
