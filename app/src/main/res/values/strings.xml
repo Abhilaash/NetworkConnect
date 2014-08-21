@@ -7,5 +7,8 @@
     <string name="title_activity_map">MapActivity</string>
     <string name="app_name">VisualNOTAM</string>
     <string name="APIKey">AIzaSyCl7935pCrQEr1f5JOL8Qf4pGSUibbLIj0</string>
+    <string name="search_describer">Airport ID</string>
+    <string name="title_activity_searchable_results">SearchableResults</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>
