@@ -3,20 +3,21 @@ package com.Velamati.Abhilaash.networkconnect;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Date;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Notam {
     private String eventid;
     private String notamnumber;
     private String aclass;
-    private String startdate;
-    private DateFormat startdateformat;
-    private String enddate;
-    private DateFormat enddateformat;
+    private String scenario;
+    private String affectedfir;
+    private String location;
     private String notamtext;
+    private String startdate;
+    private String enddate;
+    private String issued;
     private String affectedfeature;
     private String url;
     private String geom;
@@ -28,20 +29,35 @@ public class Notam {
             notamnumber = j.getString("notamnumber");
         if(j.getString("class") != null)
             aclass = j.getString("class");
-        if(j.getString("startdate") != null) {
-            String Startdate = j.getString("startdate").trim();
+        if(j.getString("scenario") != null){
+            scenario = j.getString("scenario");
+        }
+        if(j.getString("affectedfir") != null){
+            affectedfir = j.getString("affectedfir");
+        }
+        if(j.getString("location") != null){
+            location = j.getString("location");
+        }
+        if(j.getString("notamtext") != null)
+            notamtext = j.getString("notamtext");
+        if(j.getString("effectivestart") != null) {
+            String Startdate = j.getString("effectivestart").trim();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm");
             Date start = simpleDateFormat.parse(Startdate);
             startdate = start.toGMTString();
         }
-        if(j.getString("enddate") != null) {
-            String Enddate = j.getString("enddate").trim();
+        if(j.getString("effectiveend") != null) {
+            String Enddate = j.getString("effectiveend").trim();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm");
-            Date end = (Date) simpleDateFormat.parse(Enddate);
+            Date end = simpleDateFormat.parse(Enddate);
             enddate = end.toGMTString();
         }
-        if(j.getString("notamtext") != null)
-            notamtext = j.getString("notamtext");
+        if(j.getString("issued") != null){
+            String Issued = j.getString("issued").trim();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm");
+            Date issue = simpleDateFormat.parse(Issued);
+            issued = issue.toGMTString();
+        }
         if(j.getString("affectedfeature") != null)
             affectedfeature = j.getString("affectedfeature");
         if(j.has("image"))
@@ -50,18 +66,14 @@ public class Notam {
             else
                 url = "";
         else url = "";
-        if(j.getString("geom") != null)
-            if(!j.getString("geom").equals(""))
-                geom = j.getString("geom");
-            else
-                geom = "";
+        if(!j.getString("geom").equals(""))
+            geom = j.getString("geom");
         else
             geom = "";
     }
 
-    public String toString()
-    {
-        return getStartdate() + "\n" + getEnddate() + "\n" + getclass();
+    public String toString() {
+        return getStartdate() + "\n" + getEnddate();
     }
 
     public String getEventid() {
@@ -86,6 +98,30 @@ public class Notam {
 
     public void setNotamnumber(String notamnumber) {
         this.notamnumber = notamnumber;
+    }
+
+    public String getScenario() {
+        return "Scenario: " + scenario;
+    }
+
+    public void setScenario(String scenario) {
+        this.scenario = scenario;
+    }
+
+    public String getAffectedfir() {
+        return "Affected Fir: " + affectedfir;
+    }
+
+    public void setAffectedfir(String affectedfir) {
+        this.affectedfir = affectedfir;
+    }
+
+    public String getLocation() {
+        return "Location: " + location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getclass() {
@@ -117,7 +153,14 @@ public class Notam {
     public void setEnddate(String enddate) {
         this.enddate = enddate;
     }
-
+    public String getIssued() {
+        if(issued != null && !issued.equals(""))
+            return "Issue Date: " + issued;
+        return null;
+    }
+    public void setIssued(String issued){
+        this.issued = issued;
+    }
     public String getNotamtext() {
         if(notamtext != null && !notamtext.equals(""))
             return "Notam Text: " + notamtext;

@@ -3,6 +3,7 @@ package com.Velamati.Abhilaash.networkconnect;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -23,11 +24,9 @@ import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
@@ -41,6 +40,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
@@ -72,7 +72,7 @@ public class MainActivity extends FragmentActivity {
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(false);
+        searchView.setIconifiedByDefault(true);
         return true;
     }
 
@@ -155,9 +155,9 @@ public class MainActivity extends FragmentActivity {
         } catch (CertificateException e) {
             e.printStackTrace();
         }
-// From https://www.washington.edu/itconnect/security/ca/load-der.crt
-        InputStream caInput = new BufferedInputStream(new FileInputStream("load-der.crt"));
-        Certificate ca;
+        AssetManager am = this.getAssets();
+        InputStream caInput = new BufferedInputStream(am.open("notamdemo.aim.nas.faa.crt"));
+        Certificate ca = null;
         try {
             ca = cf.generateCertificate(caInput);
             System.out.println("ca=" + ((X509Certificate) ca).getSubjectDN());
@@ -177,38 +177,58 @@ public class MainActivity extends FragmentActivity {
         }
         try {
             keyStore.load(null, null);
+            keyStore.setCertificateEntry("ca", ca);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (CertificateException e) {
             e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
         }
-        keyStore.setCertificateEntry("ca", ca);
 
 // Create a TrustManager that trusts the CAs in our KeyStore
         String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
         TrustManagerFactory tmf = null;
         try {
             tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+            tmf.init(keyStore);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        }
+
+// Create an SSLContext that uses our TrustManager
+        SSLContext context = null;
+        try {
+            context = SSLContext.getInstance("TLS");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        tmf.init(keyStore);
+        try {
+            context.init(null, tmf.getTrustManagers(), null);
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        }
 
-// Create an SSLContext that uses our TrustManager
-        SSLContext context = SSLContext.getInstance("TLS");
-        context.init(null, tmf.getTrustManagers(), null);
+// Tell the URLConnection to use a SocketFactory from our SSLContext
         URL url = new URL(urlString);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//        HttpsURLConnection urlConnection = (HttpsURLConnection)url.openConnection();
+//        urlConnection.setSSLSocketFactory(context.getSocketFactory());
+//        InputStream in = urlConnection.getInputStream();
+//        copyInputStreamToOutputStream(in, System.out);
+
+        HttpsURLConnection conn = (HttpsURLConnection)url.openConnection();
+        conn.setSSLSocketFactory(context.getSocketFactory());
         conn.setReadTimeout(10000 /* milliseconds */);
         conn.setConnectTimeout(15000 /* milliseconds */);
         conn.setRequestMethod("GET");
         conn.setDoInput(true);
-        // Start the query
         conn.connect();
         return conn.getInputStream();
     }
 
-     /**
+    /**
      * Reads an InputStream and converts it to a String.
      *
      * @param stream InputStream containing HTML from targeted site.

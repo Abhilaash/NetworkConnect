@@ -2,9 +2,9 @@
 
     <!-- Activity themes -->
 
-    <style name="AppTheme" parent="android:Theme.Holo.Light">
-        <!-- Customize your theme here. -->
-    </style>
+    <style name="AppTheme" parent="android:Theme.Holo.Light"
+        background="@color/white">
+        </style>
 
 
 </resources>
