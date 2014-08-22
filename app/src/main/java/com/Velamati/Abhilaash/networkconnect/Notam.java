@@ -27,8 +27,10 @@ public class Notam {
             eventid = j.getString("eventid");
         if(j.getString("notamnumber") != null)
             notamnumber = j.getString("notamnumber");
-        if(j.getString("class") != null)
-            aclass = j.getString("class");
+        if(j.has("class")) {
+            if (j.getString("class") != null)
+                aclass = j.getString("class");
+        }
         if(j.getString("scenario") != null){
             scenario = j.getString("scenario");
         }
@@ -58,8 +60,10 @@ public class Notam {
             Date issue = simpleDateFormat.parse(Issued);
             issued = issue.toGMTString();
         }
-        if(j.getString("affectedfeature") != null)
-            affectedfeature = j.getString("affectedfeature");
+        if(j.has("affectedfeature")) {
+            if (j.getString("affectedfeature") != null)
+                affectedfeature = j.getString("affectedfeature");
+        }
         if(j.has("image"))
             if (j.getString("image") != null)
                 url = j.getString("image");
