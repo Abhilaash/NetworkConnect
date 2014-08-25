@@ -11,7 +11,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ExpandableListView;
+import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.Velamati.Abhilaash.common.logger.Log;
 import com.Velamati.Abhilaash.common.logger.LogFragment;
@@ -47,15 +49,21 @@ import javax.net.ssl.TrustManagerFactory;
 public class MainActivity extends FragmentActivity {
 
     private JSONArray json = null;
+    private JSONArray jsonairport;
     private ExpandableListView listview = null;
-    private String myUrlAirport = "https://notamdemo.aim.nas.faa.gov/bdedev/dbjsonlink?key=AIRPORT_LIST&search=";
+    private TextView textView;
+    private ListView listView;
     private String myUrlNotam = "https://notamdemo.aim.nas.faa.gov/bdedev/dbjsonlink?key=VNOTAM_API&location=";
+    private String myUrlAirport = "https://notamdemo.aim.nas.faa.gov/bdedev/dbjsonlink?key=AIRPORT_LIST&search=";
+    private ArrayList<Airport> airports = new ArrayList<Airport>();
+    private String query;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        textView = (TextView) findViewById(R.id.text);
+        listView = (ListView) findViewById(R.id.list);
         //Initialize expandable list view to display notams.
         listview = (ExpandableListView) findViewById(R.id.listview);
         handleIntent(getIntent());
@@ -81,6 +89,7 @@ public class MainActivity extends FragmentActivity {
         switch (item.getItemId()) {
             case R.id.search:
                 onSearchRequested();
+
                 return true;
             default:
                 return false;
@@ -159,8 +168,12 @@ public class MainActivity extends FragmentActivity {
         InputStream caInput = new BufferedInputStream(am.open("notamdemo.aim.nas.faa.crt"));
         Certificate ca = null;
         try {
-            ca = cf.generateCertificate(caInput);
-            System.out.println("ca=" + ((X509Certificate) ca).getSubjectDN());
+            if (cf != null) {
+                ca = cf.generateCertificate(caInput);
+            }
+            if (ca != null) {
+                System.out.println("ca=" + ((X509Certificate) ca).getSubjectDN());
+            }
         } catch (CertificateException e) {
             e.printStackTrace();
         } finally {
@@ -176,7 +189,9 @@ public class MainActivity extends FragmentActivity {
             e.printStackTrace();
         }
         try {
-            keyStore.load(null, null);
+            if (keyStore != null) {
+                keyStore.load(null, null);
+            }
             keyStore.setCertificateEntry("ca", ca);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -263,6 +278,191 @@ public class MainActivity extends FragmentActivity {
         listview.setAdapter(listAdapter);
     }
 
+    /**
+     * Implementation of AsyncTask, to fetch the data in the background away from
+     * the UI thread.
+     */
+    private class DownloadTask2 extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... urls) {
+            try {
+                return loadFromNetwork2(urls[0]);
+            } catch (IOException e) {
+                return "Connection Error";
+            }
+        }
+
+        /**
+         * Uses the logging framework to display the output of the fetch
+         * operation in the log fragment.
+         */
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                jsonairport = new JSONArray(result);
+                try {
+                    storedata();
+                    showResults();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+        }
+    }
+
+    /**
+     * Initiates the fetch operation.
+     */
+    private String loadFromNetwork2(String urlString) throws IOException {
+        InputStream stream = null;
+        String str = "";
+
+        try {
+            stream = downloadUrl(urlString);
+            str = readIt(stream);
+        } finally {
+            if (stream != null) {
+                stream.close();
+            }
+        }
+        return str;
+    }
+
+    /**
+     * Given a string representation of a URL, sets up a connection and gets
+     * an input stream.
+     *
+     * @param urlString A string representation of a URL.
+     * @return An InputStream retrieved from a successful HttpURLConnection.
+     * @throws java.io.IOException
+     */
+    private InputStream downloadUrlAirportlist(String urlString) throws IOException {
+        // Load CAs from an InputStream
+// (could be from a resource or ByteArrayInputStream or ...)
+        CertificateFactory cf = null;
+        try {
+            cf = CertificateFactory.getInstance("X.509");
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        }
+        AssetManager am = this.getAssets();
+        InputStream caInput = new BufferedInputStream(am.open("notamdemo.aim.nas.faa.crt"));
+        Certificate ca = null;
+        try {
+            if (cf != null) {
+                ca = cf.generateCertificate(caInput);
+            }
+            if (ca != null) {
+                System.out.println("ca=" + ((X509Certificate) ca).getSubjectDN());
+            }
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        } finally {
+            caInput.close();
+        }
+
+// Create a KeyStore containing our trusted CAs
+        String keyStoreType = KeyStore.getDefaultType();
+        KeyStore keyStore = null;
+        try {
+            keyStore = KeyStore.getInstance(keyStoreType);
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        }
+        try {
+            if (keyStore != null) {
+                keyStore.load(null, null);
+            }
+            keyStore.setCertificateEntry("ca", ca);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        }
+
+// Create a TrustManager that trusts the CAs in our KeyStore
+        String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+        TrustManagerFactory tmf = null;
+        try {
+            tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+            tmf.init(keyStore);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        }
+
+// Create an SSLContext that uses our TrustManager
+        SSLContext context = null;
+        try {
+            context = SSLContext.getInstance("TLS");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        try {
+            context.init(null, tmf.getTrustManagers(), null);
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        }
+
+// Tell the URLConnection to use a SocketFactory from our SSLContext
+        URL url = new URL(urlString);
+//        HttpsURLConnection urlConnection = (HttpsURLConnection)url.openConnection();
+//        urlConnection.setSSLSocketFactory(context.getSocketFactory());
+//        InputStream in = urlConnection.getInputStream();
+//        copyInputStreamToOutputStream(in, System.out);
+
+        HttpsURLConnection conn = (HttpsURLConnection)url.openConnection();
+        conn.setSSLSocketFactory(context.getSocketFactory());
+        conn.setReadTimeout(10000 /* milliseconds */);
+        conn.setConnectTimeout(15000 /* milliseconds */);
+        conn.setRequestMethod("GET");
+        conn.setDoInput(true);
+        conn.connect();
+        return conn.getInputStream();
+    }
+
+    /**
+     * Reads an InputStream and converts it to a String.
+     *
+     * @param stream InputStream containing HTML from targeted site.
+     * @return String concatenated according to len parameter.
+     * @throws java.io.IOException
+     * @throws java.io.UnsupportedEncodingException
+     */
+    private String readIt2(InputStream stream) throws IOException {
+        String a = "";
+        InputStreamReader reader = new InputStreamReader(stream, "UTF-8");
+        if (reader.ready()) {
+            BufferedReader br = new BufferedReader(reader);
+            String line = br.readLine();
+            while (line != null) {
+                a += line + "\n";
+                line = br.readLine();
+            }
+            br.close();
+        }
+        return a;
+    }
+
+    private void storedata() throws ParseException, JSONException {
+//        ArrayList<String> headers = new ArrayList<String>();
+//        HashMap<String, Airport> airports = new HashMap<String, Airport>();
+        for (int x = 0; x < jsonairport.length(); x++) {
+            JSONObject j = jsonairport.getJSONObject(x);
+//            headers.add(j.getString("arpt_") + ":" + j.getString("Airport ID"));
+            airports.add(new Airport(j));
+        }
+    }
+
     @Override
     protected void onNewIntent(Intent intent) {
         handleIntent(intent);
@@ -277,8 +477,51 @@ public class MainActivity extends FragmentActivity {
         } else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             // handles a search query
             String query = intent.getStringExtra(SearchManager.QUERY);
-            String myUrlNotamtemp = myUrlNotam + query.toUpperCase();
-            new DownloadTask().execute(myUrlNotamtemp);
+            String myUrlAirporttemp = myUrlAirport + query.toUpperCase();
+            this.query = query;
+            new DownloadTask2().execute(myUrlAirporttemp);
+        }
+    }
+
+    private void showResults() {
+        // Get the intent, verify the action and get the query
+//        Uri uri = getIntent().getData();
+//            Uri uri = Uri.parse(myUrlAirport + query);
+//        Cursor cursor = managedQuery(uri, null, null, null, null);
+
+        if (airports.size() < 1) {
+            // There are no results
+            textView.setText("No Results Found");
+        } else {
+//            for(int x = 0; x < jsonairport.length(); x++)
+            // Specify the columns we want to display in the result
+//            String[] from = new String[] {new String("arpt_id"), new String("arpt_name")};
+
+            // Specify the corresponding layout elements where we want the columns to go
+////            int[] to = new int[] { R.id.id, R.id.name };
+//            for(int x = 0; x < data.length; x++){
+//                try {
+//                    data[x] = airports.get(x).getArptid() + "\n" + jsonairport.getJSONObject(x).getString("arpt_name");
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+            // Create a arrayadapter adapter for the airports and apply them to the ListView
+            AirportAdapter airportadapter = new AirportAdapter(this, airports);
+            listView.setAdapter(airportadapter);
+
+//            // Define the on-click listener for the list items
+//            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//                @Override
+//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                    // Build the Intent used to open WordActivity with a specific word Uri
+//                    Intent searchIntent = new Intent(getApplicationContext(), SearchableResults.class);
+//                    Uri data = Uri.withAppendedPath(DictionaryProvider.CONTENT_URI, String.valueOf(id));
+//                    searchIntent.setData(data);
+//                    startActivity(searchIntent);
+//                }
+//            });
         }
     }
 

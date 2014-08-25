@@ -37,10 +37,10 @@ public class SearchableResults extends Activity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
 
-            SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-            SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-            searchView.setIconifiedByDefault(false);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(false);
         return true;
     }
 

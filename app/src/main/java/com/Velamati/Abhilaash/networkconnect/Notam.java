@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Notam {
+
     private String eventid;
     private String notamnumber;
     private String aclass;
@@ -27,9 +28,9 @@ public class Notam {
             eventid = j.getString("eventid");
         if(j.getString("notamnumber") != null)
             notamnumber = j.getString("notamnumber");
-        if(j.has("class")) {
-            if (j.getString("class") != null)
-                aclass = j.getString("class");
+        if(j.has("classcode")) {
+            if (j.getString("classcode") != null)
+                aclass = j.getString("classcode");
         }
         if(j.getString("scenario") != null){
             scenario = j.getString("scenario");
@@ -70,8 +71,8 @@ public class Notam {
             else
                 url = "";
         else url = "";
-        if(!j.getString("geom").equals(""))
-            geom = j.getString("geom");
+        if(!j.getString("geomwkt").equals(""))
+            geom = j.getString("geomwkt");
         else
             geom = "";
     }

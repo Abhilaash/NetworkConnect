@@ -13,4 +13,5 @@
         android:hint="@string/search_describer"
         android:showAsAction="collapseActionView|ifRoom"
         android:actionViewClass="android.widget.SearchView" />
-</menu>
+
+    </menu>
