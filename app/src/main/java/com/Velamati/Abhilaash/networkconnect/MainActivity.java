@@ -4,12 +4,15 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -510,18 +513,18 @@ public class MainActivity extends FragmentActivity {
             AirportAdapter airportadapter = new AirportAdapter(this, airports);
             listView.setAdapter(airportadapter);
 
-//            // Define the on-click listener for the list items
-//            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//                @Override
-//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                    // Build the Intent used to open WordActivity with a specific word Uri
-//                    Intent searchIntent = new Intent(getApplicationContext(), SearchableResults.class);
-//                    Uri data = Uri.withAppendedPath(DictionaryProvider.CONTENT_URI, String.valueOf(id));
-//                    searchIntent.setData(data);
-//                    startActivity(searchIntent);
-//                }
-//            });
+            // Define the on-click listener for the list items
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    // Build the Intent used to open WordActivity with a specific word Uri
+                    Intent searchIntent = new Intent(getApplicationContext(), SearchableResults.class);
+                    Uri data = Uri.withAppendedPath(DictionaryProvider.CONTENT_URI, String.valueOf(id));
+                    searchIntent.setData(data);
+                    startActivity(searchIntent);
+                }
+            });
         }
     }
 

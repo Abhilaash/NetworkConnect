@@ -32,6 +32,8 @@ public class Notam {
             if (j.getString("classcode") != null)
                 aclass = j.getString("classcode");
         }
+        if(j.getString("class") != null)
+            aclass = j.getString("class");
         if(j.getString("scenario") != null){
             scenario = j.getString("scenario");
         }
@@ -61,10 +63,8 @@ public class Notam {
             Date issue = simpleDateFormat.parse(Issued);
             issued = issue.toGMTString();
         }
-        if(j.has("affectedfeature")) {
-            if (j.getString("affectedfeature") != null)
-                affectedfeature = j.getString("affectedfeature");
-        }
+        if(j.getString("affectedfeature") != null)
+            affectedfeature = j.getString("affectedfeature");
         if(j.has("image"))
             if (j.getString("image") != null)
                 url = j.getString("image");

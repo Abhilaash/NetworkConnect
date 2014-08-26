@@ -1,13 +1,14 @@
 package com.Velamati.Abhilaash.networkconnect;
 
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.graphics.Typeface;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -15,13 +16,33 @@ import java.util.ArrayList;
 /**
  * Created by Abhilaash on 8/25/2014.
  */
-public class AirportAdapter extends BaseAdapter {
+public class AirportAdapter implements ListAdapter {
+
     Context context;
     ArrayList<Airport> airports;
 
     public AirportAdapter(Context context, ArrayList<Airport> airportArrayList) {
         this.context = context;
         airports = airportArrayList;
+    }
+    @Override
+    public boolean areAllItemsEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        return true;
+    }
+
+    @Override
+    public void registerDataSetObserver(DataSetObserver observer) {
+
+    }
+
+    @Override
+    public void unregisterDataSetObserver(DataSetObserver observer) {
+
     }
 
     @Override
@@ -37,6 +58,11 @@ public class AirportAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         return position;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return false;
     }
 
     @Override
@@ -59,5 +85,22 @@ public class AirportAdapter extends BaseAdapter {
         spannable.setSpan(new CustomTypefaceSpan("roboto", fontreg), arptid.length(), arptid.length() + arptname.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         textView.setText(spannable);
         return convertView;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return 0;
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 1;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        if(airports.size() == 0)
+            return true;
+        return false;
     }
 }
